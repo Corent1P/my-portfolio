@@ -1,26 +1,24 @@
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-
+} from "@/components/ui/popover";
 
 const navigationLinks = [
   { href: "#", label: "Overview", active: true },
   { href: "#", label: "Graphs" },
   { href: "#", label: "Backups" },
-]
+];
 
 export default function Navigation() {
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
       <div className="flex h-16 justify-between gap-4 px-4 md:px-6">
@@ -90,8 +88,8 @@ export default function Navigation() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className='flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 p-0.5'>
-            <Badge className='bg-background hover:bg-background text-foreground rounded-full border-none'>
+          <div className="flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 p-0.5">
+            <Badge className="bg-background hover:bg-background text-foreground rounded-full border-none">
               Developer
             </Badge>
           </div>
@@ -102,5 +100,5 @@ export default function Navigation() {
         </div>
       </div>
     </header>
-  )
+  );
 }
