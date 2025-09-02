@@ -38,7 +38,7 @@ export function HeroSection() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.25, duration: 0.5 }}
         >
-          21 years old French developer.
+          21 years old developer.
         </motion.p>
       </div>
       <div className="flex gap-14 justify-center px-10 pb-15">
