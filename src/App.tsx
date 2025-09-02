@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import Navigation from "./components/ui/navigation";
 import { AboutSection } from "./sections/about-section";
 import { HeroSection } from "./sections/hero-section";
+import { SkillsSection } from "./sections/skills-section";
 
 function App() {
   return (
@@ -21,12 +22,7 @@ function App() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
-        <div className="w-full min-h-screen">
-          <motion.div
-            className="bg-black w-64 h-64"
-            whileInView={{ rotate: 360, transition: { duration: 2 } }}
-          />
-        </div>
+        <SkillsSection />
       </motion.div>
     </div>
   );
