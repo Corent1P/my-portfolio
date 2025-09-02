@@ -3,7 +3,10 @@ import { BentoSkills } from "@/components/ui/bento-skills";
 
 export function SkillsSection() {
   return (
-    <div className="flex flex-col gap-20 min-h-screen pt-40 items-center">
+    <div
+      id="skills"
+      className="flex flex-col gap-20 min-h-screen pt-40 items-center"
+    >
       <motion.div
         className="flex flex-col w-1/2 font-bold"
         initial={{ scale: 0.5 }}
