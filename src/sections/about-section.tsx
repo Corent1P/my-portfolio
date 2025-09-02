@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 
 export function AboutSection() {
   return (
-    <div className="flex gap-20 min-h-screen">
+    <div id="about" className="flex gap-20 min-h-screen">
       <motion.div
         className="flex flex-col w-1/2 font-bold"
         initial={{ scale: 0.5 }}

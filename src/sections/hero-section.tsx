@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle } from "../components/ui/card";
 
 export function HeroSection() {
   return (
-    <div className="flex flex-col gap-20 min-h-screen pt-20">
+    <div id="hero" className="flex flex-col gap-20 min-h-screen pt-20">
       <div>
         <div className="flex justify-center pb-5">
           <motion.div

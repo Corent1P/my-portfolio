@@ -14,8 +14,8 @@ import {
 
 const navigationLinks = [
   { href: "#", label: "Overview", active: true },
-  { href: "#", label: "Graphs" },
-  { href: "#", label: "Backups" },
+  { href: "#", label: "About" },
+  { href: "#", label: "Skills" },
 ];
 
 export default function Navigation() {

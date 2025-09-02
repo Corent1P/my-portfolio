@@ -24,7 +24,8 @@
       "correctness": {
         "useExhaustiveDependencies": "warn",
         "noUnusedImports": "error",
-        "noChildrenProp": "off"
+        "noChildrenProp": "off",
+        "useUniqueElementIds": "off"
       },
       "style": {
         "useImportType": "warn",
