@@ -2,8 +2,11 @@
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { UnityView } from "@/components/ui/unity-view";
+import { useAuth } from "@/components/auth-provider";
+import { LoginPrompt } from "@/components/login-prompt";
 
 export default function Games() {
+  const { user } = useAuth();
   return (
     <div className="flex flex-col w-full min-h-screen pt-20 px-4 md:px-6 space-y-12 pb-20">
       <motion.div
@@ -19,6 +22,8 @@ export default function Games() {
           Play my Unity WebGL builds directly in your browser.
         </p>
       </motion.div>
+
+      {!user && <LoginPrompt />}
 
       <motion.div
         initial={{ opacity: 0 }}
