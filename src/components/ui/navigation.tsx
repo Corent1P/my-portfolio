@@ -12,6 +12,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useAuth } from "@/components/auth-provider";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const navigationLinks = [
   { href: "/", label: "Home" },
@@ -20,10 +22,11 @@ const navigationLinks = [
 
 export default function Navigation() {
   const location = useLocation();
+  const { user, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
-      <div className="flex h-16 justify-between gap-4 px-4 md:px-6">
+      <div className="relative flex h-16 items-center justify-between gap-4 px-4 md:px-6">
         <div className="flex gap-2">
           {/* Mobile Menu */}
           <div className="flex items-center md:hidden">
@@ -52,7 +55,7 @@ export default function Navigation() {
                     />
                     <path
                       d="M4 12H20"
-                      className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]"
+                      className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]"
                     />
                   </svg>
                 </Button>
@@ -69,6 +72,33 @@ export default function Navigation() {
                         </Link>
                       </NavigationMenuItem>
                     ))}
+                    {!user ? (
+                      <>
+                        <NavigationMenuItem className="w-full">
+                          <Link to="/login" className="w-full">
+                            <NavigationMenuLink className="block w-full py-1.5 px-2 hover:bg-accent rounded-md text-sm font-medium">
+                              Sign In
+                            </NavigationMenuLink>
+                          </Link>
+                        </NavigationMenuItem>
+                        <NavigationMenuItem className="w-full">
+                          <Link to="/register" className="w-full">
+                            <NavigationMenuLink className="block w-full py-1.5 px-2 hover:bg-accent rounded-md text-sm font-medium">
+                              Sign Up
+                            </NavigationMenuLink>
+                          </Link>
+                        </NavigationMenuItem>
+                      </>
+                    ) : (
+                      <NavigationMenuItem className="w-full">
+                        <NavigationMenuLink
+                          className="block w-full py-1.5 px-2 hover:bg-accent rounded-md text-sm font-medium cursor-pointer"
+                          onClick={() => signOut()}
+                        >
+                          Logout
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
+                    )}
                   </NavigationMenuList>
                 </NavigationMenu>
               </PopoverContent>
@@ -98,6 +128,25 @@ export default function Navigation() {
             </NavigationMenu>
           </div>
         </div>
+
+        {/* Centered Auth Buttons */}
+        <div className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 gap-4 md:flex">
+          {!user ? (
+            <>
+              <Link to="/login">
+                <Button variant="ghost">Sign In</Button>
+              </Link>
+              <Link to="/register">
+                <Button>Sign Up</Button>
+              </Link>
+            </>
+          ) : (
+            <div className="text-sm font-medium">
+              Welcome, {user.user_metadata?.name || user.email}
+            </div>
+          )}
+        </div>
+
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 p-0.5">
             <Badge className="bg-background hover:bg-background text-foreground rounded-full border-none">
@@ -108,6 +157,25 @@ export default function Navigation() {
             <span className="font-bold text-foreground">Corentin</span>{" "}
             <span className="font-bold text-primary">Piquet</span>
           </div>
+          {user && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="" alt={user.user_metadata?.name || user.email || ""} />
+                    <AvatarFallback>
+                      {(user.user_metadata?.name || user.email)?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-56 p-1" align="end">
+                <Button variant="ghost" className="w-full justify-start" onClick={() => signOut()}>
+                  Log out
+                </Button>
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
       </div>
     </header>
