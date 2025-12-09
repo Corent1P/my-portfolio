@@ -70,7 +70,7 @@ const features = [
 
 export function BentoSkills() {
   return (
-    <BentoGrid className="lg:grid-rows-3">
+    <BentoGrid className="lg:grid-rows-3 gap-8">
       {features.map((feature) => (
         <BentoCard key={feature.name} {...feature} />
       ))}

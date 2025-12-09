@@ -1,149 +1,187 @@
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
+import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import {
+  Carousel,
+  type CarouselApi,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
+import { cn } from "@/lib/utils";
 
 export function AboutSection() {
+  const [api, setApi] = React.useState<CarouselApi>();
+  const [current, setCurrent] = React.useState(0);
+  const [count, setCount] = React.useState(0);
+
+  React.useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap() + 1);
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1);
+    });
+  }, [api]);
+
   return (
-    <div id="about" className="flex gap-20 min-h-screen">
+    <div
+      id="about"
+      className="flex flex-col gap-12 min-h-screen items-center justify-center p-8"
+    >
+      {/* TOP: Title */}
       <motion.div
-        className="flex flex-col w-1/2 font-bold"
-        initial={{ scale: 0.5 }}
-        whileInView={{ scale: 1 }}
+        className="flex flex-col w-full font-bold items-center text-center"
+        initial={{ opacity: 0, y: -50 }}
+        whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="sticky top-60 mb-80">
-          <h1 className="text-9xl text-shadow-lg/30">About</h1>
-          <h1 className="inline-block text-9xl text-primary align-middle text-shadow-lg/30 text-shadow-indigo-500">
-            Me
-          </h1>
-          <img
-            src={"/assets/waving-hand.png"}
-            alt="Waving Hand"
-            className="inline-block rotate-340 w-60 h-60 align-end animate-wiggle"
-          />
+        <div className="mb-0">
+          <h1 className="text-6xl md:text-9xl text-shadow-lg/30">About</h1>
+          <div className="flex items-center justify-center gap-4">
+            <h1 className="inline-block text-6xl md:text-9xl text-primary align-middle text-shadow-lg/30 text-shadow-indigo-500">
+              Me
+            </h1>
+          </div>
         </div>
       </motion.div>
+
+      {/* BOTTOM: Carousel */}
       <motion.div
-        className="flex flex-col gap-8 w-1/2 mr-10"
-        initial={{ x: 60 }}
-        whileInView={{ x: 0 }}
-        transition={{ delay: 0.5, duration: 0.7 }}
+        className="flex flex-col w-full h-full items-center justify-center max-w-7xl"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.7 }}
       >
-        <Card className="shadow-indigo-200 shadow-2xl w-full mr-10 h-80 bg-white">
-          <CardHeader className="flex gap-4 items-center">
-            <CardTitle className="text-5xl">What about me ?</CardTitle>
-          </CardHeader>
-          <Separator />
-          <CardContent>
-            <div className="flex gap-7 font-medium h-full items-start">
-              <img
-                src={"/assets/minecraft.svg"}
-                alt="Minecraft"
-                className="w-40 h-40 rounded-2xl shadow-md/30"
+        <Carousel
+          setApi={setApi}
+          className="w-full"
+          opts={{
+            align: "start",
+          }}
+        >
+          <CarouselContent className="-ml-4">
+            {features.map((feature, index) => (
+              <CarouselItem
+                key={index}
+                className="pl-4 md:basis-1/2 lg:basis-1/3"
+              >
+                <div className="p-1 h-full">
+                  <Card className="border bg-card text-card-foreground h-[500px] flex flex-col justify-between hover:border-primary/50 transition-colors shadow-none">
+                    <CardHeader className="flex flex-col items-center gap-4 pt-10">
+                      {/* Wrapper for Icon/Image */}
+                      <div className="w-40 h-40 flex items-center justify-center">
+                        {feature.Icon}
+                      </div>
+                      <CardTitle className="text-3xl font-bold">
+                        {feature.name}
+                      </CardTitle>
+                    </CardHeader>
+                    {/* Removed Separator for cleaner look */}
+                    <CardContent className="flex flex-col items-center justify-start h-full gap-6 p-6 px-10 text-center">
+                      <p className="text-lg text-muted-foreground leading-relaxed">
+                        {feature.description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+
+        {/* Dots Pagination */}
+        <div className="py-8 text-center text-sm text-muted-foreground">
+          <div className="flex gap-2 justify-center mt-4">
+            {Array.from({ length: count }).map((_, index) => (
+              <button
+                type="button"
+                key={index}
+                className={cn(
+                  "w-3 h-3 rounded-full transition-all duration-300",
+                  current === index + 1
+                    ? "bg-primary w-8"
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50",
+                )}
+                onClick={() => api?.scrollTo(index)}
+                aria-label={`Go to slide ${index + 1}`}
               />
-              <div className="flex flex-col text-3xl gap-3 text-left justify-between h-full">
-                <p>
-                  It started here:{" "}
-                  <span className="text-primary font-bold">Minecraft</span>
-                </p>
-                <p>
-                  First game and first love,{" "}
-                  <span className="text-primary font-bold">I was 13</span> and I
-                  already wanted to understand{" "}
-                  <span className="text-primary font-bold">how it works.</span>
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <div className="flex gap-4 w-full mr-10">
-          <Card className="shadow-indigo-200 shadow-2xl w-1/2 h-80 bg-white">
-            <CardHeader className="flex gap-4 items-center">
-              <CardTitle className="text-5xl">What Next ?</CardTitle>
-            </CardHeader>
-            <Separator />
-            <CardContent>
-              <div className="flex gap-7 font-medium h-full items-start">
-                <img
-                  src={"/assets/java.png"}
-                  alt="Java"
-                  className="w-40 h-40 rounded-2xl shadow-md/30 border-2"
-                />
-                <div className="flex flex-col text-3xl gap-3 text-left justify-between h-full">
-                  <p>
-                    I created my first mod in{" "}
-                    <span className="text-primary font-bold">Java</span>
-                  </p>
-                  <p>
-                    I <span className="text-primary font-bold">loved it</span>
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card className="shadow-indigo-200 shadow-2xl w-1/2 h-80 bg-white">
-            <CardHeader className="flex gap-4 items-center">
-              <CardTitle className="text-5xl">After That ?</CardTitle>
-            </CardHeader>
-            <Separator />
-            <CardContent>
-              <div className="flex gap-7 font-medium h-full items-start">
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Visual_Studio_Code_1.35_icon.svg/512px-Visual_Studio_Code_1.35_icon.svg.png"
-                  alt="Java"
-                  className="w-40 h-40 rounded-2xl shadow-md/30 border-2"
-                />
-                <div className="flex flex-col text-3xl gap-3 text-left justify-between h-full">
-                  <p>
-                    I still wanted to learn{" "}
-                    <span className="text-primary font-bold">Coding</span>
-                  </p>
-                  <p>
-                    Create <span className="text-primary font-bold">More</span>
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            ))}
+          </div>
         </div>
-        <Card className="shadow-indigo-200 shadow-2xl w-full mr-10 h-80 bg-white">
-          <CardHeader className="flex gap-4 items-center">
-            <CardTitle className="text-5xl">And Now ?</CardTitle>
-          </CardHeader>
-          <Separator />
-          <CardContent>
-            <div className="flex gap-7 font-medium h-full items-start">
-              <img
-                src="https://epitech.bj/wp-content/uploads/2020/03/EPI-LOGO-SIGNATURE-2018.png"
-                alt="Epitech"
-                className="w-40 h-40 rounded-2xl shadow-md/30 border-2"
-              />
-              <div className="flex flex-col text-3xl gap-3 text-left justify-between h-full">
-                <p>
-                  Now i'm a proud fourth-year student at{" "}
-                  <span className="text-primary font-bold">Epitech</span>
-                </p>
-                <p>
-                  I’m feeding my{" "}
-                  <span className="text-primary font-bold">curiosity</span> by{" "}
-                  <span className="text-primary font-bold">exploring</span>{" "}
-                  different fields of{" "}
-                  <span className="text-primary font-bold">
-                    computer science
-                  </span>
-                  .
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        {/* <p className="text-5xl mx-5 text-center">
-          <span className="text-primary font-bold">Hi! </span>My name is <span className="text-primary font-bold">Corentin Piquet.</span><br/> A young boy who first fell in love with the game Minecraft and who wanted very quickly to understand how the game actually worked.
-          And by digging deeper, the kid discovered programming. Fast forward to today: I’m 21 years old, a fourth-year student at Epitech,
-          and more recently studying at Tecsup in Peru, where I’m feeding my curiosity and eagerness to learn by exploring different fields of computer science.
-          My goal isn’t to become the best developer in the world, but rather to find my own place in this vast world of technology and, above all, to keep enjoying coding by always discovering new things.
-        </p> */}
       </motion.div>
     </div>
   );
 }
+
+// Content for the Carousel
+const features = [
+  {
+    Icon: (
+      <img
+        src="/assets/minecraft.svg"
+        alt="Minecraft Icon"
+        className="w-full h-full object-contain"
+      />
+    ),
+    name: "The Beginning",
+    description:
+      "It started with Minecraft. I was 13 and wanted to understand how it worked. That curiosity sparked everything.",
+  },
+  {
+    Icon: (
+      <img
+        src="/assets/java.png"
+        alt="Java Icon"
+        className="w-full h-full object-contain"
+      />
+    ),
+    name: "First Steps",
+    description:
+      "Created my first mod in Java. I loved creating rather than just playing. It wasn't just a game anymore.",
+  },
+  {
+    Icon: (
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Visual_Studio_Code_1.35_icon.svg/512px-Visual_Studio_Code_1.35_icon.svg.png"
+        alt="Code Icon"
+        className="w-full h-full object-contain"
+      />
+    ),
+    name: "Coding Journey",
+    description:
+      "From simple mods to complex algorithms. Always wanting to create more and learn new technologies.",
+  },
+  {
+    Icon: (
+      <img
+        src="https://epitech.bj/wp-content/uploads/2020/03/EPI-LOGO-SIGNATURE-2018.png"
+        alt="Epitech Icon"
+        className="w-full h-full object-contain"
+      />
+    ),
+    name: "Current Status",
+    description:
+      "Proud 4th-year student at Epitech. Feeding my curiosity by exploring different fields of computer science.",
+  },
+  {
+    Icon: (
+      <img
+        src="/assets/waving-hand.png"
+        alt="Future Icon"
+        className="w-full h-full object-contain"
+      />
+    ),
+    name: "The Future",
+    description:
+      "Looking forward to new challenges, building impactful projects, and continuing to learn every day.",
+  },
+];

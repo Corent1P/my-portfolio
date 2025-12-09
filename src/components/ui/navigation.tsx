@@ -1,3 +1,4 @@
+import { Link, useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,16 +14,18 @@ import {
 } from "@/components/ui/popover";
 
 const navigationLinks = [
-  { href: "#", label: "Overview", active: true },
-  { href: "#", label: "About" },
-  { href: "#", label: "Skills" },
+  { href: "/", label: "Home" },
+  { href: "/games", label: "Games" },
 ];
 
 export default function Navigation() {
+  const location = useLocation();
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white">
       <div className="flex h-16 justify-between gap-4 px-4 md:px-6">
         <div className="flex gap-2">
+          {/* Mobile Menu */}
           <div className="flex items-center md:hidden">
             <Popover>
               <PopoverTrigger asChild>
@@ -59,9 +62,11 @@ export default function Navigation() {
                   <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                     {navigationLinks.map((link, index) => (
                       <NavigationMenuItem key={index} className="w-full">
-                        <NavigationMenuLink href={link.href} className="py-1.5">
-                          {link.label}
-                        </NavigationMenuLink>
+                        <Link to={link.href} className="w-full">
+                          <NavigationMenuLink className="block w-full py-1.5 px-2 hover:bg-accent rounded-md text-sm font-medium">
+                            {link.label}
+                          </NavigationMenuLink>
+                        </Link>
                       </NavigationMenuItem>
                     ))}
                   </NavigationMenuList>
@@ -69,20 +74,26 @@ export default function Navigation() {
               </PopoverContent>
             </Popover>
           </div>
+
+          {/* Desktop Menu */}
           <div className="flex items-center gap-6">
             <NavigationMenu className="h-full *:h-full max-md:hidden">
               <NavigationMenuList className="h-full gap-5">
-                {navigationLinks.map((link, index) => (
-                  <NavigationMenuItem key={index} className="h-full">
-                    <NavigationMenuLink
-                      active={link.active}
-                      href={link.href}
-                      className="text-md text-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary data-[active]:text-primary data-[active]:font-semibold h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent focus:bg-transparent active:bg-transparent focus:text-primary"
-                    >
-                      {link.label}
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                ))}
+                {navigationLinks.map((link, index) => {
+                  const isActive = location.pathname === link.href;
+                  return (
+                    <NavigationMenuItem key={index} className="h-full">
+                      <Link to={link.href} className="h-full flex items-center">
+                        <NavigationMenuLink
+                          active={isActive}
+                          className="text-md text-foreground hover:text-primary border-b-primary hover:border-b-primary data-[active]:border-b-primary data-[active]:text-primary data-[active]:font-semibold h-full justify-center rounded-none border-y-2 border-transparent py-1.5 font-medium hover:bg-transparent data-[active]:bg-transparent focus:bg-transparent active:bg-transparent focus:text-primary flex items-center"
+                        >
+                          {link.label}
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                  );
+                })}
               </NavigationMenuList>
             </NavigationMenu>
           </div>
