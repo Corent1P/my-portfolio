@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import { Progress } from "@/components/ui/progress";
 
@@ -7,8 +7,6 @@ interface UnityViewProps {
   dataUrl: string;
   frameworkUrl: string;
   codeUrl: string;
-  // Ajout de la prop optionnelle pour remonter le score
-  onGameOver?: (score: number) => void;
 }
 
 export function UnityView({
@@ -16,16 +14,8 @@ export function UnityView({
   dataUrl,
   frameworkUrl,
   codeUrl,
-  onGameOver, // On le récupère ici
 }: UnityViewProps) {
-  const { 
-    unityProvider, 
-    isLoaded, 
-    loadingProgression,
-    // On extrait les fonctions d'écoute
-    addEventListener,
-    removeEventListener
-  } = useUnityContext({
+  const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
     loaderUrl: loaderUrl,
     dataUrl: dataUrl,
     frameworkUrl: frameworkUrl,
@@ -37,25 +27,6 @@ export function UnityView({
   useEffect(() => {
     setProgress(Math.round(loadingProgression * 100));
   }, [loadingProgression]);
-
-  // --- C'est ici que l'écoute se fait ---
-  useEffect(() => {
-    // Si le parent n'a pas donné de fonction onGameOver, on n'écoute rien
-    if (!onGameOver) return;
-
-    // Cette fonction fait le pont entre l'event Unity et ta prop React
-    const handleGameOver = (score: number) => {
-      onGameOver(score);
-    };
-
-    // On s'abonne à l'événement "OnGameOver" (le même nom que dans le .jslib)
-    addEventListener("OnGameOver", handleGameOver);
-
-    // Important : on se désabonne quand le composant est détruit pour éviter les fuites de mémoire
-    return () => {
-      removeEventListener("OnGameOver", handleGameOver);
-    };
-  }, [addEventListener, removeEventListener, onGameOver]);
 
   return (
     <div className="relative w-full aspect-video bg-black/5 rounded-xl overflow-hidden shadow-xl border">
