@@ -9,7 +9,7 @@ export async function submitScore(
     playerName: string
 ) {
     try {
-        const response = await fetch(`${API_URL}/scores`, {
+        const response = await fetch(`${API_URL}/api/scores`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export async function submitScore(
 
 export async function getTopScores(gameId: string) {
     try {
-        const response = await fetch(`${API_URL}/scores/${gameId}`);
+        const response = await fetch(`${API_URL}/api/scores/${gameId}`);
 
         // Check content-type to ensure we're getting JSON
         const contentType = response.headers.get("content-type");
