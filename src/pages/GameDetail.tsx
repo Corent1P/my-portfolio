@@ -48,10 +48,10 @@ export default function GameDetail() {
 
                 <div className="rounded-xl border bg-card text-card-foreground shadow-sm overflow-hidden p-1">
                     <UnityView
-                        loaderUrl={`/games/${game.buildPath}/Build/game.loader.js`}
-                        dataUrl={`/games/${game.buildPath}/Build/game.data`}
-                        frameworkUrl={`/games/${game.buildPath}/Build/game.framework.js`}
-                        codeUrl={`/games/${game.buildPath}/Build/game.wasm`}
+                        loaderUrl={`/games/${game.buildPath}/Build/Build.loader.js`}
+                        dataUrl={`/games/${game.buildPath}/Build/Build.data.br`}
+                        frameworkUrl={`/games/${game.buildPath}/Build/Build.framework.js.br`}
+                        codeUrl={`/games/${game.buildPath}/Build/Build.wasm.br`}
                     />
                 </div>
 
