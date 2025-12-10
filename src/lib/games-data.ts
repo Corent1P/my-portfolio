@@ -17,12 +17,12 @@ export const GAMES: Game[] = [
         genre: "Puzzle",
     },
     {
-        id: "space-explorer",
-        title: "Space Explorer",
-        description: "Another placeholder. Create a build folder in public/games/ for each game.",
-        buildPath: "space-explorer",
+        id: "props-mania",
+        title: "Props Mania",
+        description: "Poor people have lost their belongings! Help them find their lost props in this fun minigame.",
+        buildPath: "props-mania",
         year: "2025",
-        genre: "Arcade",
+        genre: "Puzzle",
     },
     {
         id: "project-beta",
