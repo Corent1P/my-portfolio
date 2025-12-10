@@ -1,15 +1,44 @@
 "use client";
 import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
 import { GAMES } from "@/lib/games-data";
 import { UnityView } from "@/components/ui/unity-view";
 import { Badge } from "@/components/ui/badge";
 import { Leaderboard } from "@/components/leaderboard";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { submitScore } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 
 export default function GameDetail() {
     const { gameId } = useParams();
     const game = GAMES.find((g) => g.id === gameId);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, setRefreshLeaderboard] = useState(0);
+
+    const handleGameOver = async (score: number) => {
+        if (!game) return;
+        try {
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session) {
+                console.warn("User not logged in, score not submitted.");
+                return;
+            }
+
+            const token = session.access_token;
+            const email = session.user.email || "";
+            const playerName = session.user.user_metadata.full_name || email.split('@')[0] || "Anonymous";
+
+            console.log("Submitting score:", { gameId: game.id, score, playerName });
+            await submitScore(game.id, score, token, email, playerName);
+
+            setRefreshLeaderboard(prev => prev + 1);
+
+        } catch (error) {
+            console.error("Failed to submit score:", error);
+        }
+    };
 
     if (!game) {
         return (
@@ -52,6 +81,7 @@ export default function GameDetail() {
                         dataUrl={`/games/${game.buildPath}/Build/Build.data`}
                         frameworkUrl={`/games/${game.buildPath}/Build/Build.framework.js`}
                         codeUrl={`/games/${game.buildPath}/Build/Build.wasm`}
+                        onGameOver={handleGameOver}
                     />
                 </div>
 

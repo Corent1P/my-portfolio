@@ -7,6 +7,7 @@ interface UnityViewProps {
   dataUrl: string;
   frameworkUrl: string;
   codeUrl: string;
+  onGameOver?: (score: number) => void;
 }
 
 export function UnityView({
@@ -14,8 +15,9 @@ export function UnityView({
   dataUrl,
   frameworkUrl,
   codeUrl,
+  onGameOver,
 }: UnityViewProps) {
-  const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
+  const { unityProvider, isLoaded, loadingProgression, addEventListener, removeEventListener } = useUnityContext({
     loaderUrl: loaderUrl,
     dataUrl: dataUrl,
     frameworkUrl: frameworkUrl,
@@ -27,6 +29,15 @@ export function UnityView({
   useEffect(() => {
     setProgress(Math.round(loadingProgression * 100));
   }, [loadingProgression]);
+
+  useEffect(() => {
+    if (onGameOver) {
+      addEventListener("OnGameOver", onGameOver);
+      return () => {
+        removeEventListener("OnGameOver", onGameOver);
+      };
+    }
+  }, [addEventListener, removeEventListener, onGameOver]);
 
   return (
     <div className="relative w-full aspect-video bg-black/5 rounded-xl overflow-hidden shadow-xl border">
