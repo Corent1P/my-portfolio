@@ -1,53 +1,44 @@
 "use client";
 import { useParams, Link } from "react-router-dom";
+import { useState } from "react";
 import { GAMES } from "@/lib/games-data";
 import { UnityView } from "@/components/ui/unity-view";
 import { Badge } from "@/components/ui/badge";
 import { Leaderboard } from "@/components/leaderboard";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { submitScore } from "@/lib/api";
+import { supabase } from "@/lib/supabase";
 
 export default function GameDetail() {
     const { gameId } = useParams();
     const game = GAMES.find((g) => g.id === gameId);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, setRefreshLeaderboard] = useState(0);
 
-    const [isSaving, setIsSaving] = useState(false);
-
-    // --- C'est ici que la magie opère ---
-    const handleGameOver = async (score) => {
-        console.log("Score reçu de Unity:", score);
-        
-        if (isSaving) return;
-        setIsSaving(true);
-
+    const handleGameOver = async (score: number) => {
+        if (!game) return;
         try {
-            // Remplace l'URL par la route de ton API Node/Express/Next
-            const response = await fetch("http://localhost:3000/api/scores", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    // Si tu as un système d'auth, ajoute ton token ici :
-                    // "Authorization": `Bearer ${token}` 
-                },
-                body: JSON.stringify({
-                    gameId: gameId,
-                    score: score,
-                    timestamp: new Date().toISOString()
-                    // userId: "..." // Si tu as l'ID de l'utilisateur connecté
-                }),
-            });
+            const { data: { session } } = await supabase.auth.getSession();
 
-            if (response.ok) {
-                console.log("Score sauvegardé dans Mongo !");
-                // Optionnel : Rafraichir le leaderboard ici
-                // queryClient.invalidateQueries(['leaderboard'])
-            } else {
-                console.error("Erreur sauvegarde");
+            if (!session) {
+                console.warn("User not logged in, score not submitted.");
+                return;
             }
+
+            const token = session.access_token;
+            const email = session.user.email || "";
+            const playerName = session.user.user_metadata.full_name || email.split('@')[0] || "Anonymous";
+
+            // Round score to 2 decimal places if it's a float
+            const formattedScore = parseFloat(score.toFixed(2));
+            console.log("Submitting score:", { gameId: game.id, score: formattedScore, playerName });
+            await submitScore(game.id, formattedScore, token, email, playerName);
+
+            setRefreshLeaderboard(prev => prev + 1);
+
         } catch (error) {
-            console.error("Erreur réseau:", error);
-        } finally {
-            setIsSaving(false);
+            console.error("Failed to submit score:", error);
         }
     };
 

@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useEffect, useState } from "react";
+import { getTopScores } from "@/lib/api";
 
 interface ScoreEntry {
     playerName: string;
@@ -18,23 +19,17 @@ interface ScoreEntry {
 export function Leaderboard({ gameId }: { gameId?: string }) {
     const [scores, setScores] = useState<ScoreEntry[]>([]);
     const [loading, setLoading] = useState(true);
-
-    // Default to 'memory' if no prop provided, but 'memory' is the main one now.
     const activeGameId = gameId || 'memory';
 
     useEffect(() => {
         setLoading(true);
-        fetch(`/api/scores/${activeGameId}`)
-            .then(res => {
-                if (!res.ok) throw new Error("Failed to fetch");
-                return res.json();
-            })
+        getTopScores(activeGameId)
             .then(data => {
                 setScores(data);
                 setLoading(false);
             })
-            .catch(err => {
-                console.error("Error fetching leaderboard:", err);
+            .catch(() => {
+                // Error logged in api.ts
                 setLoading(false);
             });
     }, [activeGameId]);
