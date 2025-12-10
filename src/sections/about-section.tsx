@@ -163,7 +163,7 @@ const features = [
   {
     Icon: (
       <img
-        src="https://epitech.bj/wp-content/uploads/2020/03/EPI-LOGO-SIGNATURE-2018.png"
+        src="https://avatars.githubusercontent.com/u/7068904?s=200&v=4"
         alt="Epitech Icon"
         className="w-full h-full object-contain"
       />
