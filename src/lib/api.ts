@@ -1,5 +1,5 @@
 // Use relative path to leverage Netlify proxy (defined in netlify.toml)
-const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:4242";
+const API_URL = import.meta.env.VITE_BACKEND_URL || "";
 
 export async function submitScore(
     gameId: string,
