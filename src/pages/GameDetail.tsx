@@ -11,6 +11,46 @@ export default function GameDetail() {
     const { gameId } = useParams();
     const game = GAMES.find((g) => g.id === gameId);
 
+    const [isSaving, setIsSaving] = useState(false);
+
+    // --- C'est ici que la magie opère ---
+    const handleGameOver = async (score) => {
+        console.log("Score reçu de Unity:", score);
+        
+        if (isSaving) return;
+        setIsSaving(true);
+
+        try {
+            // Remplace l'URL par la route de ton API Node/Express/Next
+            const response = await fetch("http://localhost:3000/api/scores", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    // Si tu as un système d'auth, ajoute ton token ici :
+                    // "Authorization": `Bearer ${token}` 
+                },
+                body: JSON.stringify({
+                    gameId: gameId,
+                    score: score,
+                    timestamp: new Date().toISOString()
+                    // userId: "..." // Si tu as l'ID de l'utilisateur connecté
+                }),
+            });
+
+            if (response.ok) {
+                console.log("Score sauvegardé dans Mongo !");
+                // Optionnel : Rafraichir le leaderboard ici
+                // queryClient.invalidateQueries(['leaderboard'])
+            } else {
+                console.error("Erreur sauvegarde");
+            }
+        } catch (error) {
+            console.error("Erreur réseau:", error);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
     if (!game) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen gap-4">
@@ -52,6 +92,7 @@ export default function GameDetail() {
                         dataUrl={`/games/${game.buildPath}/Build/Build.data`}
                         frameworkUrl={`/games/${game.buildPath}/Build/Build.framework.js`}
                         codeUrl={`/games/${game.buildPath}/Build/Build.wasm`}
+                        onGameOver={handleGameOver}
                     />
                 </div>
 
