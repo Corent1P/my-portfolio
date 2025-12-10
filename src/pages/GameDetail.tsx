@@ -30,8 +30,10 @@ export default function GameDetail() {
             const email = session.user.email || "";
             const playerName = session.user.user_metadata.full_name || email.split('@')[0] || "Anonymous";
 
-            console.log("Submitting score:", { gameId: game.id, score, playerName });
-            await submitScore(game.id, score, token, email, playerName);
+            // Round score to 2 decimal places if it's a float
+            const formattedScore = parseFloat(score.toFixed(2));
+            console.log("Submitting score:", { gameId: game.id, score: formattedScore, playerName });
+            await submitScore(game.id, formattedScore, token, email, playerName);
 
             setRefreshLeaderboard(prev => prev + 1);
 
