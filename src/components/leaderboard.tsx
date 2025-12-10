@@ -24,7 +24,8 @@ export function Leaderboard({ gameId }: { gameId?: string }) {
 
     useEffect(() => {
         setLoading(true);
-        fetch(`http://localhost:4242/api/scores/${activeGameId}`)
+        const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4242';
+        fetch(`${backendUrl}/api/scores/${activeGameId}`)
             .then(res => {
                 if (!res.ok) throw new Error("Failed to fetch");
                 return res.json();
