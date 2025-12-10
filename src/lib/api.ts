@@ -34,3 +34,16 @@ export async function submitScore(
         throw error;
     }
 }
+
+export async function getTopScores(gameId: string) {
+    try {
+        const response = await fetch(`${API_URL}/scores/${gameId}`);
+        if (!response.ok) {
+            throw new Error("Failed to fetch top scores");
+        }
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching top scores:", error);
+        throw error;
+    }
+}
