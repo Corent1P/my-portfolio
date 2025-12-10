@@ -1,9 +1,4 @@
-// Use relative path to leverage Netlify proxy (defined in netlify.toml)
 const API_URL = import.meta.env.VITE_BACKEND_URL || "";
-console.log("🔧 API Config Debug:", {
-    API_URL,
-    RAW_ENV: import.meta.env.VITE_BACKEND_URL,
-});
 
 export async function submitScore(
     gameId: string,
