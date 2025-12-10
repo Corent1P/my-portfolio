@@ -19,7 +19,7 @@ export const GAMES: Game[] = [
     {
         id: "props-mania",
         title: "Props Mania",
-        description: "Poor people have lost their belongings! Help them find their lost props in this fun minigame.",
+        description: "People have lost their belongings! Help them find their lost props in this fun minigame.",
         buildPath: "props-mania",
         year: "2025",
         genre: "Puzzle",
