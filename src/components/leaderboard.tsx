@@ -1,3 +1,4 @@
+import { useParams } from "react-router-dom";
 import {
     Table,
     TableBody,
@@ -17,9 +18,13 @@ interface ScoreEntry {
 }
 
 export function Leaderboard({ gameId }: { gameId?: string }) {
+    const params = useParams();
+    const routeGameId = params.gameId;
+
+    // Priority: prop > route param > default 'memory'
+    const activeGameId = gameId || routeGameId || 'memory';
     const [scores, setScores] = useState<ScoreEntry[]>([]);
     const [loading, setLoading] = useState(true);
-    const activeGameId = gameId || 'memory';
 
     useEffect(() => {
         setLoading(true);

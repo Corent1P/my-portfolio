@@ -87,7 +87,7 @@ export default function GameDetail() {
                     />
                 </div>
 
-                <Leaderboard />
+                <Leaderboard gameId={game.id} />
             </div>
         </div>
     );
