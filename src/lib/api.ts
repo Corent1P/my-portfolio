@@ -38,12 +38,20 @@ export async function submitScore(
 export async function getTopScores(gameId: string) {
     try {
         const response = await fetch(`${API_URL}/scores/${gameId}`);
+
+        // Check content-type to ensure we're getting JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            console.error("Server returned non-JSON response:", await response.text());
+            throw new Error("Server returned non-JSON response. Check API_URL configuration.");
+        }
+
         if (!response.ok) {
             throw new Error("Failed to fetch top scores");
         }
         return await response.json();
     } catch (error) {
-        console.error("Error fetching top scores:", error);
-        throw error;
+        console.error("Error fetching leaderboard:", error);
+        return []; // Return empty array instead of throwing to prevent UI crash
     }
 }
